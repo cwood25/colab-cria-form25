@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Como o Lab de Ideias mudou você? · CodeFicar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple:   #6D28D9;
+    --purple-lt:#EDE9FE;
+    --purple-dk:#4C1D95;
+    --navy:     #0F172A;
+    --navy2:    #1E293B;
+    --cyan:     #0EA5E9;
+    --green:    #10B981;
+    --amber:    #F59E0B;
+    --white:    #FFFFFF;
+    --off:      #F8FAFC;
+    --border:   #E2E8F0;
+    --muted:    #64748B;
+    --text:     #0F172A;
+    --radius:   14px;
+    --radius-sm:10px;
+  }
+
+  html { background: var(--navy); min-height: 100vh; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    padding: 20px 28px 0;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .brand {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: #A78BFA;
+    text-transform: uppercase;
+  }
+  .step-counter { font-size: 12px; color: #64748B; }
+
+  /* progress */
+  .prog-track {
+    height: 2px;
+    background: #1E293B;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+  .prog-fill {
+    height: 100%;
+    background: var(--purple);
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    flex: 1;
+    padding: 32px 28px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* step wrapper — animated */
+  .step {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    animation: fadeUp 0.28s ease both;
+  }
+  .step.active { display: flex; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  .q-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 10px;
+    font-weight: 400;
+  }
+  .q-sub {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  /* ── WELCOME ── */
+  .welcome-icon {
+    width: 60px; height: 60px;
+    background: var(--purple-lt);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    font-size: 28px;
+  }
+  .welcome-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .chip {
+    padding: 6px 12px;
+    background: var(--off);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── INPUTS ── */
+  .field-group { margin-bottom: 14px; }
+  .field-label { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 6px; display: block; }
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  textarea:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 4px rgba(109,40,217,0.10);
+  }
+  textarea { resize: none; line-height: 1.6; }
+  .char-count {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 5px;
+  }
+
+  /* ── NPS ── */
+  .nps-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .nps-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .nps-btn {
+    padding: 11px 0;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nps-btn:hover { border-color: var(--purple); color: var(--purple); }
+  .nps-btn.sel { background: var(--purple); color: var(--white); border-color: var(--purple); }
+  .nps-legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 28px; }
+
+  /* ── SCALE 5 ── */
+  .scale-block { margin-bottom: 24px; }
+  .scale-label { font-size: 12px; font-weight: 600; color: var(--purple); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .scale-row { display: flex; gap: 8px; margin-bottom: 4px; }
+  .scale-btn {
+    flex: 1;
+    padding: 14px 0;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .scale-btn:hover { border-color: var(--purple); color: var(--purple); }
+  .scale-btn.sel { background: var(--purple); color: var(--white); border-color: var(--purple); }
+  .scale-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+
+  /* ── OPTION BUTTONS ── */
+  .opt-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    padding: 15px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.15s;
+    line-height: 1.4;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .opt-btn:hover { border-color: var(--purple); background: var(--purple-lt); }
+  .opt-btn.sel { border-color: var(--purple); background: var(--purple-lt); color: var(--purple-dk); }
+  .opt-radio {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .opt-btn.sel .opt-radio {
+    background: var(--purple);
+    border-color: var(--purple);
+  }
+  .opt-radio::after {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--white);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .opt-btn.sel .opt-radio::after { opacity: 1; }
+
+  /* ── BUTTONS ── */
+  .btn-next {
+    width: 100%;
+    padding: 16px;
+    background: var(--purple);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-next:hover { background: var(--purple-dk); }
+  .btn-next:active { transform: scale(0.98); }
+  .btn-next:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
+
+  .btn-back {
+    background: none;
+    border: none;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 12px 0 0;
+    font-family: 'DM Sans', sans-serif;
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .btn-back:hover { color: var(--text); }
+
+  /* ── THANK YOU ── */
+  .thanks-hero {
+    background: var(--navy);
+    margin: -32px -28px 28px;
+    padding: 36px 28px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .thanks-hero::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(109,40,217,0.3) 0%, transparent 70%);
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .thanks-check {
+    width: 64px; height: 64px;
+    background: var(--purple);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 18px;
+    font-size: 28px;
+    position: relative;
+  }
+  .thanks-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--white);
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .thanks-sub { font-size: 14px; color: #94A3B8; line-height: 1.6; position: relative; }
+
+  .summary-block {
+    background: var(--off);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .summary-section { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--purple); margin-bottom: 12px; }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+  }
+  .summary-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .summary-key { font-size: 13px; color: var(--muted); flex-shrink: 0; }
+  .summary-val { font-size: 13px; color: var(--text); font-weight: 500; text-align: right; }
+  .summary-quote {
+    background: var(--off);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--purple);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .btn-copy {
+    width: 100%;
+    padding: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-copy:hover { border-color: var(--purple); color: var(--purple); }
+  .btn-copy.done { background: #ECFDF5; border-color: var(--green); color: #065F46; }
+
+  .btn-share {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    background: #25D366;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    transition: opacity 0.15s;
+  }
+  .btn-share:hover { opacity: 0.9; }
+
+  /* ── FOOTER ── */
+  .form-footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    padding-bottom: 24px;
+  }
+  .form-footer a { color: var(--purple); text-decoration: none; }
+
+  /* ── FORMSPREE NOTICE ── */
+  .notice {
+    background: #FFF7ED;
+    border: 1px solid #FED7AA;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 12px;
+    color: #92400E;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .notice strong { font-weight: 600; }
+
+  @media (max-width: 480px) {
+    .shell { max-width: 100%; }
+    .nps-btn { padding: 10px 0; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;background:#6D28D9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">C</div><div><span class="brand" style="display:block;line-height:1;">CODEFICAR</span><span style="font-size:9px;color:#475569;letter-spacing:0.05em;line-height:1;">Associação de Educação e Cultura</span></div></div>
+      <span class="step-counter" id="stepCounter"></span>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" id="progFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- PASSO 0 — Boas-vindas -->
+    <div class="step active" id="step0">
+      <div class="welcome-icon">🌱</div>
+      <p class="eyebrow">CodeFicar · Lab de Ideias 2025 · Museu do Amanhã</p>
+      <h1 class="q-title">Como o Lab de Ideias mudou você?</h1>
+      <p class="q-sub">Leva só 3 minutos. Suas respostas nos ajudam a levar o Colab Cria para mais comunidades — e são anônimas se você preferir.</p>
+      <div class="welcome-chips">
+        <span class="chip">⏱ 3 minutos</span>
+        <span class="chip">6 perguntas</span>
+        <span class="chip">🔒 Suas informações ficam seguras</span>
+      </div>
+      <button class="btn-next" onclick="goTo(1)">Começar →</button>
+    </div>
+
+    <!-- PASSO 1 — Nome e bairro -->
+    <div class="step" id="step1">
+      <p class="eyebrow">Passo 1 de 6</p>
+      <h2 class="q-title">Como você se chama?</h2>
+      <p class="q-sub">Primeiro nome é suficiente. Vamos usar para identificar sua resposta internamente.</p>
+      <div class="field-group">
+        <label class="field-label" for="f-nome">Primeiro nome</label>
+        <input type="text" id="f-nome" placeholder="Ex: Larissa" oninput="checkStep1()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="f-bairro">Bairro onde você mora</label>
+        <input type="text" id="f-bairro" placeholder="Ex: Penha, Cidade de Deus, Capão Redondo…" oninput="checkStep1()">
+      </div>
+      <button class="btn-next" id="next1" disabled onclick="goTo(2)">Continuar</button>
+      <button class="btn-back" onclick="goTo(0)">← Voltar</button>
+    </div>
+
+    <!-- PASSO 2 — NPS -->
+    <div class="step" id="step2">
+      <p class="eyebrow">Passo 2 de 6</p>
+      <h2 class="q-title">Qual a chance de você indicar o Lab de Ideias para um amigo?</h2>
+      <p class="q-sub">De 0 a 10, onde 0 = "jamais indicaria" e 10 = "com certeza absoluta".</p>
+      <div class="nps-grid" id="npsRow1"></div>
+      <div class="nps-grid-2" id="npsRow2"></div>
+      <div class="nps-legend">
+        <span>← Não indicaria</span>
+        <span>Indicaria com certeza →</span>
+      </div>
+      <button class="btn-next" id="next2" disabled onclick="goTo(3)">Continuar</button>
+      <button class="btn-back" onclick="goTo(1)">← Voltar</button>
+    </div>
+
+    <!-- PASSO 3 — Confiança antes/depois -->
+    <div class="step" id="step3">
+      <p class="eyebrow">Passo 3 de 6</p>
+      <h2 class="q-title">O quanto você se sentia capaz de transformar uma ideia em projeto real?</h2>
+      <p class="q-sub">Escala de 1 (nada capaz) a 5 (muito capaz).</p>
+      <div class="scale-block">
+        <p class="scale-label">Antes do Lab de Ideias</p>
+        <div class="scale-row" id="scaleBeforeRow"></div>
+        <div class="scale-ends"><span>Nada capaz</span><span>Muito capaz</span></div>
+      </div>
+      <div class="scale-block">
+        <p class="scale-label">Depois do Lab de Ideias</p>
+        <div class="scale-row" id="scaleAfterRow"></div>
+        <div class="scale-ends"><span>Nada capaz</span><span>Muito capaz</span></div>
+      </div>
+      <button class="btn-next" id="next3" disabled onclick="goTo(4)">Continuar</button>
+      <button class="btn-back" onclick="goTo(2)">← Voltar</button>
+    </div>
+
+    <!-- PASSO 4 — Prototipagem -->
+    <div class="step" id="step4">
+      <p class="eyebrow">Passo 4 de 6</p>
+      <h2 class="q-title">Antes do Lab de Ideias, você já tinha trabalhado com prototipagem?</h2>
+      <p class="q-sub">Código, robótica, hardware, impressão 3D, qualquer coisa parecida.</p>
+      <button class="opt-btn" onclick="selectOpt('proto','Nunca tinha feito nada assim', this)">
+        <div class="opt-radio"></div>
+        Nunca tinha feito nada assim
+      </button>
+      <button class="opt-btn" onclick="selectOpt('proto','Tinha feito um pouco, mas era iniciante', this)">
+        <div class="opt-radio"></div>
+        Tinha feito um pouco, mas era iniciante
+      </button>
+      <button class="opt-btn" onclick="selectOpt('proto','Sim, já tinha experiência com isso', this)">
+        <div class="opt-radio"></div>
+        Sim, já tinha experiência com isso
+      </button>
+      <button class="btn-next" id="next4" disabled onclick="goTo(5)">Continuar</button>
+      <button class="btn-back" onclick="goTo(3)">← Voltar</button>
+    </div>
+
+    <!-- PASSO 5 — Depoimento -->
+    <div class="step" id="step5">
+      <p class="eyebrow">Passo 5 de 6</p>
+      <h2 class="q-title">Em suas palavras: o que o Lab de Ideias mudou em você?</h2>
+      <p class="q-sub">Pode ser uma frase, uma história curta, ou o que vier na cabeça. Não existe resposta errada — seja honesta.</p>
+      <textarea id="f-depo" rows="5" maxlength="300" placeholder="Escreva aqui..." oninput="checkDepo()"></textarea>
+      <div class="char-count"><span id="depoCount">0</span>/300</div>
+      <button class="btn-next" id="next5" disabled onclick="goTo(6)">Continuar</button>
+      <button class="btn-back" onclick="goTo(4)">← Voltar</button>
+    </div>
+
+    <!-- PASSO 6 — Permissão -->
+    <div class="step" id="step6">
+      <p class="eyebrow">Passo 6 de 6</p>
+      <h2 class="q-title">Posso usar sua resposta para mostrar o impacto do programa?</h2>
+      <p class="q-sub">Queremos mostrar para futuros parceiros o que o Lab de Ideias gera na prática. Você decide como quer aparecer.</p>
+      <button class="opt-btn" onclick="selectOpt('perm','Sim, pode usar meu nome e bairro', this)">
+        <div class="opt-radio"></div>
+        Sim, pode usar meu nome e bairro
+      </button>
+      <button class="opt-btn" onclick="selectOpt('perm','Sim, mas sem meu nome (anônimo)', this)">
+        <div class="opt-radio"></div>
+        Sim, mas sem meu nome (anônimo)
+      </button>
+      <button class="opt-btn" onclick="selectOpt('perm','Prefiro que não use', this)">
+        <div class="opt-radio"></div>
+        Prefiro que não use
+      </button>
+      <button class="btn-next" id="next6" disabled onclick="submitForm()">Enviar respostas ✓</button>
+      <button class="btn-back" onclick="goTo(5)">← Voltar</button>
+    </div>
+
+    <!-- PASSO 7 — Obrigado -->
+    <div class="step" id="step7" style="padding-top:0">
+      <div class="thanks-hero">
+        <div class="thanks-check">✓</div>
+        <p class="thanks-name" id="thanksName">Valeu!</p>
+        <p class="thanks-sub">Suas respostas vão ajudar o Colab Cria a chegar em mais comunidades. Você faz parte disso. 🙏</p>
+      </div>
+
+      <div class="summary-block">
+        <p class="summary-section">Resumo das respostas</p>
+        <div class="summary-row">
+          <span class="summary-key">Nome</span>
+          <span class="summary-val" id="s-nome">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Bairro</span>
+          <span class="summary-val" id="s-bairro">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">NPS</span>
+          <span class="summary-val" id="s-nps">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Confiança antes → depois</span>
+          <span class="summary-val" id="s-conf">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Prototipagem prévia</span>
+          <span class="summary-val" id="s-proto">—</span>
+        </div>
+        <div class="summary-row" style="border-bottom:none">
+          <span class="summary-key">Permissão de uso</span>
+          <span class="summary-val" id="s-perm">—</span>
+        </div>
+      </div>
+
+      <div class="summary-quote" id="s-depo">—</div>
+
+      <button class="btn-copy" id="copyBtn" onclick="copyAll()">
+        <span>📋</span> Copiar tudo para planilha
+      </button>
+
+      <button class="btn-share" onclick="shareWhats()">
+        <span>💬</span> Compartilhar via WhatsApp
+      </button>
+
+      <div class="form-footer">
+        <strong>CodeFicar</strong> · Associação de Educação e Cultura<br>Programa Colab Cria<br>
+        <a href="https://codeficar.org">codeficar.org</a>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /shell -->
+
+<script>
+/* ── STATE ── */
+const S = {
+  nps: null,
+  confBefore: null,
+  confAfter: null,
+  proto: null,
+  perm: null
+};
+
+/* ── NAVIGATION ── */
+const TOTAL = 6;
+function goTo(n) {
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  window.scrollTo(0, 0);
+
+  // header
+  if (n === 0 || n === 7) {
+    document.getElementById('stepCounter').textContent = '';
+    document.getElementById('progFill').style.width = n === 7 ? '100%' : '0%';
+  } else {
+    document.getElementById('stepCounter').textContent = `${n} de ${TOTAL}`;
+    document.getElementById('progFill').style.width = `${(n / TOTAL) * 100}%`;
+  }
+}
+
+/* ── STEP 1 ── */
+function checkStep1() {
+  const ok = document.getElementById('f-nome').value.trim().length > 1
+          && document.getElementById('f-bairro').value.trim().length > 1;
+  document.getElementById('next1').disabled = !ok;
+}
+
+/* ── NPS ── */
+(function buildNps() {
+  const r1 = document.getElementById('npsRow1');
+  const r2 = document.getElementById('npsRow2');
+  [0,1,2,3,4,5].forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'nps-btn';
+    b.textContent = n;
+    b.onclick = () => { S.nps = n; document.querySelectorAll('.nps-btn').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); document.getElementById('next2').disabled = false; };
+    r1.appendChild(b);
+  });
+  [6,7,8,9,10].forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'nps-btn';
+    b.textContent = n;
+    b.onclick = () => { S.nps = n; document.querySelectorAll('.nps-btn').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); document.getElementById('next2').disabled = false; };
+    r2.appendChild(b);
+  });
+})();
+
+/* ── SCALE ── */
+function buildScale(containerId, key, nextId) {
+  const row = document.getElementById(containerId);
+  [1,2,3,4,5].forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'scale-btn';
+    b.textContent = n;
+    b.onclick = () => {
+      S[key] = n;
+      row.querySelectorAll('.scale-btn').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+      checkStep3();
+    };
+    row.appendChild(b);
+  });
+}
+buildScale('scaleBeforeRow', 'confBefore', 'next3');
+buildScale('scaleAfterRow',  'confAfter',  'next3');
+function checkStep3() {
+  document.getElementById('next3').disabled = !(S.confBefore && S.confAfter);
+}
+
+/* ── OPT BUTTONS ── */
+function selectOpt(key, val, el) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  S[key] = val;
+  if (key === 'proto') document.getElementById('next4').disabled = false;
+  if (key === 'perm')  document.getElementById('next6').disabled = false;
+}
+
+/* ── DEPO ── */
+function checkDepo() {
+  const v = document.getElementById('f-depo').value;
+  document.getElementById('depoCount').textContent = v.length;
+  document.getElementById('next5').disabled = v.trim().length < 10;
+}
+
+/* ── SUBMIT ── */
+function submitForm() {
+  const nome   = document.getElementById('f-nome').value.trim();
+  const bairro = document.getElementById('f-bairro').value.trim();
+  const depo   = document.getElementById('f-depo').value.trim();
+
+  // fill summary
+  document.getElementById('thanksName').textContent = `Valeu, ${nome}! 🙏`;
+  document.getElementById('s-nome').textContent   = nome;
+  document.getElementById('s-bairro').textContent = bairro;
+  document.getElementById('s-nps').textContent    = `${S.nps}/10`;
+  document.getElementById('s-conf').textContent   = `${S.confBefore}/5 → ${S.confAfter}/5`;
+  document.getElementById('s-proto').textContent  = S.proto;
+  document.getElementById('s-perm').textContent   = S.perm;
+  document.getElementById('s-depo').textContent   = `"${depo}"`;
+
+  // submit to Formspree
+  const ENDPOINT = 'https://formspree.io/f/meedwkry';
+  const formData = new FormData();
+  formData.append('nome', nome);
+  formData.append('bairro', bairro);
+  formData.append('nps', S.nps);
+  formData.append('confianca_antes', S.confBefore);
+  formData.append('confianca_depois', S.confAfter);
+  formData.append('prototipagem_antes', S.proto);
+  formData.append('depoimento', depo);
+  formData.append('permissao_uso', S.perm);
+  formData.append('_subject', 'Nova resposta — Colab Cria Lab de Ideias');
+
+  fetch(ENDPOINT, {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: formData
+  })
+  .then(r => {
+    if (!r.ok) { console.warn('Formspree error:', r.status); }
+  })
+  .catch(e => console.warn('Fetch error:', e));
+
+  goTo(7);
+}
+
+/* ── COPY ── */
+function copyAll() {
+  const nome   = document.getElementById('f-nome').value.trim();
+  const bairro = document.getElementById('f-bairro').value.trim();
+  const depo   = document.getElementById('f-depo').value.trim();
+  const text = [
+    `Nome: ${nome}`,
+    `Bairro: ${bairro}`,
+    `NPS: ${S.nps}/10`,
+    `Confiança antes: ${S.confBefore}/5`,
+    `Confiança depois: ${S.confAfter}/5`,
+    `Prototipagem antes: ${S.proto}`,
+    `Depoimento: "${depo}"`,
+    `Permissão: ${S.perm}`,
+  ].join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.classList.add('done');
+    btn.innerHTML = '<span>✓</span> Copiado!';
+    setTimeout(() => { btn.classList.remove('done'); btn.innerHTML = '<span>📋</span> Copiar tudo para planilha'; }, 2500);
+  });
+}
+
+/* ── WHATSAPP SHARE ── */
+function shareWhats() {
+  const nome = document.getElementById('f-nome').value.trim();
+  const depo = document.getElementById('f-depo').value.trim();
+  const msg = encodeURIComponent(
+    `Respondi o formulário do Colab Cria! 🌱\n\n` +
+    `NPS: ${S.nps}/10\n` +
+    `Confiança: ${S.confBefore}/5 → ${S.confAfter}/5\n\n` +
+    `"${depo}"\n\n— ${nome}`
+  );
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
+}
+</script>
+</body>
+</html>
